@@ -1,6 +1,6 @@
 # coding: utf-8
 Pod::Spec.new do |s|
-  s.name         = "haopintui"
+  s.name         = "PluginHaopintui"
   s.version      = "1.0.0"
   s.summary      = "haopintui Source ."
   s.homepage     = 'https://github.com/shaibaoj/haopintui-plugin-ios-baichuan'
