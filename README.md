@@ -1,1 +1,0 @@
-# haopintui-plugin-ios-baichuan
