@@ -25,6 +25,7 @@ WX_PlUGIN_EXPORT_MODULE(haopintui, HaopintuiModule)
 @synthesize weexInstance;
 
 WX_EXPORT_METHOD_SYNC(@selector(getAppName))
+WX_EXPORT_METHOD_SYNC(@selector(isInstall:))
 
 - (NSString*)getAppName
 {
@@ -45,6 +46,62 @@ WX_EXPORT_METHOD_SYNC(@selector(getAppName))
     } else {
         // Fallback on earlier versions
         return 2;
+    }
+}
+
+/** 判断是否安装了微信 */
+-(BOOL)isInstall:(NSDictionary *)urlParams
+{
+//    NSString* packageName; // 结果字符串
+    NSString *scheme = nil;
+    NSString *packageName = nil;
+    
+    if(urlParams[@"scheme"]){
+        scheme = [WXConvert NSString:urlParams[@"scheme"]];
+    }
+    if(urlParams[@"packageName"]){
+        packageName = [WXConvert NSString:urlParams[@"packageName"]];
+    }
+    
+    scheme = [scheme stringByAppendingString: @"://"];
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:scheme]]){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+/** 打开其他app */
+-(BOOL)open:(NSDictionary *)urlParams
+{
+    NSString *scheme = nil;
+    NSString *packageName = nil;
+    NSString *url = nil;
+    
+    if(urlParams[@"scheme"]){
+        scheme = [WXConvert NSString:urlParams[@"scheme"]];
+    }
+    if(urlParams[@"packageName"]){
+        packageName = [WXConvert NSString:urlParams[@"packageName"]];
+    }
+    if(urlParams[@"url"]){
+        url = [WXConvert NSString:urlParams[@"url"]];
+    }
+    
+    if ([[UIApplication sharedApplication]
+         canOpenURL:[NSURL URLWithString:url]])
+    {
+        return [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+    }
+    else
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"URL error"
+                    message:[NSString stringWithFormat:
+                             @"没有定义的访问连接%@", url]
+                   delegate:self cancelButtonTitle:@"Ok"
+          otherButtonTitles:nil];
+        [alert show];
+        return false;
     }
 }
 
